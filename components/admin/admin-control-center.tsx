@@ -825,7 +825,7 @@ export function AdminControlCenter({
               No entities are available for your role.
             </div>
           ) : (
-            <div className="flex flex-wrap gap-2">
+            <div className="grid gap-3 md:grid-cols-2">
               {availableEntities.map((entity) => (
                 <button
                   key={entity.key}
@@ -834,21 +834,33 @@ export function AdminControlCenter({
                     setSelectedEntityKey(entity.key);
                   }}
                   className={cn(
-                    "rounded-xl border px-3 py-2 text-left transition-colors",
+                    "group rounded-xl border px-4 py-3 text-left transition-all duration-300",
                     selectedEntity?.key === entity.key
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/40 hover:bg-muted/50"
+                      ? "border-primary bg-gradient-to-br from-primary/8 via-primary/4 to-accent/4 shadow-elevation-md"
+                      : "border-border/40 hover:border-primary/30 hover:bg-muted/50 hover:shadow-elevation-sm"
                   )}
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{entity.label}</span>
-                    {typeof entity.count === "number" && (
-                      <Badge variant="secondary">{entity.count}</Badge>
-                    )}
+                  <div className="flex items-start gap-3">
+                    <div className={cn(
+                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-all",
+                      selectedEntity?.key === entity.key
+                        ? "bg-primary/15 border-primary/20 text-primary shadow-elevation-sm"
+                        : "bg-primary/10 border-primary/15 text-primary/70 group-hover:bg-primary/15 group-hover:border-primary/20"
+                    )}>
+                      <Database className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-foreground">{entity.label}</span>
+                        {typeof entity.count === "number" && (
+                          <Badge variant="secondary" className="shrink-0">{entity.count}</Badge>
+                        )}
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                        {entity.description}
+                      </p>
+                    </div>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {entity.description}
-                  </p>
                 </button>
               ))}
             </div>
