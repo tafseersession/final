@@ -1097,26 +1097,39 @@ export function AdminControlCenter({
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editingItemId ? "Edit" : "Create"} {selectedEntity?.singularLabel}
             </DialogTitle>
             <DialogDescription>{selectedEntity?.description}</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-2">
-            {selectedEntity?.formFields.map((field) => (
-              <div key={field.key} className="space-y-2">
-                <Label htmlFor={field.key}>{field.label}</Label>
-                {renderField(field)}
-                {field.description && (
-                  <p className="text-xs text-muted-foreground">
-                    {field.description}
-                  </p>
-                )}
-              </div>
-            ))}
+          
+          <div className="py-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              {selectedEntity?.formFields.map((field) => (
+                <div key={field.key} className="space-y-2 group">
+                  <Label htmlFor={field.key} className="font-semibold text-foreground flex items-center gap-2">
+                    {field.label}
+                    {field.description && (
+                      <span className="text-xs font-normal text-muted-foreground bg-muted/50 rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-help" title={field.description}>
+                        ?
+                      </span>
+                    )}
+                  </Label>
+                  <div className="relative">
+                    {renderField(field)}
+                  </div>
+                  {field.description && (
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      {field.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
+          
           <DialogFooter>
             <Button
               variant="outline"
