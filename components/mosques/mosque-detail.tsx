@@ -629,32 +629,53 @@ export function MosqueDetail({ data }: MosqueDetailProps) {
           </div>
 
           <div className="space-y-6">
-            <Card className="rounded-[2rem] border-border/50 shadow-sm lg:sticky lg:top-[88px]">
-              <CardHeader className="border-b border-border/40 bg-gradient-to-br from-primary to-primary/90 text-primary-foreground">
-                <CardTitle className="flex items-center gap-2 text-xl font-black tracking-tight">
-                  <Clock className="h-5 w-5" />
-                  Quick Prayer View
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 p-4">
-                {prayerTimes ? (
-                  <>
-                    <QuickPrayerRow label="Fajr" value={prayerTimes.fajr_iqama || prayerTimes.fajr_adhan} />
-                    <QuickPrayerRow label="Dhuhr" value={prayerTimes.dhuhr_iqama || prayerTimes.dhuhr_adhan} />
-                    <QuickPrayerRow label="Asr" value={prayerTimes.asr_iqama || prayerTimes.asr_adhan} />
-                    <QuickPrayerRow label="Maghrib" value={prayerTimes.maghrib_iqama || prayerTimes.maghrib_adhan} />
-                    <QuickPrayerRow label="Isha" value={prayerTimes.isha_iqama || prayerTimes.isha_adhan} />
-                    {prayerTimes.jummah_time ? (
-                      <>
-                        <Separator />
-                        <QuickPrayerRow label="Jummah" value={prayerTimes.jummah_iqama || prayerTimes.jummah_time} />
-                      </>
-                    ) : null}
-                  </>
-                ) : (
-                  <p className="text-sm text-muted-foreground">Prayer times have not been published yet.</p>
-                )}
-              </CardContent>
+            <Card className="rounded-2xl border-border/40 shadow-elevation-md lg:sticky lg:top-[88px] overflow-hidden">
+              <div className="relative">
+                {/* Premium gradient header with decorative accent */}
+                <div className="bg-gradient-to-r from-primary/8 via-transparent to-accent/5 border-b border-border/30 p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 border border-primary/20">
+                      <Clock className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground tracking-tight">Prayer Times</h3>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {prayerDateLabel 
+                          ? prayerDateIsToday 
+                            ? `Today • ${prayerDateLabel}`
+                            : prayerDateLabel
+                          : "Schedule"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <CardContent className="p-4">
+                  {prayerTimes ? (
+                    <div className="space-y-2.5">
+                      <QuickPrayerRow label="Fajr" value={prayerTimes.fajr_iqama || prayerTimes.fajr_adhan} />
+                      <QuickPrayerRow label="Dhuhr" value={prayerTimes.dhuhr_iqama || prayerTimes.dhuhr_adhan} />
+                      <QuickPrayerRow label="Asr" value={prayerTimes.asr_iqama || prayerTimes.asr_adhan} />
+                      <QuickPrayerRow label="Maghrib" value={prayerTimes.maghrib_iqama || prayerTimes.maghrib_adhan} />
+                      <QuickPrayerRow label="Isha" value={prayerTimes.isha_iqama || prayerTimes.isha_adhan} />
+                      {prayerTimes.jummah_time ? (
+                        <>
+                          <Separator className="my-2.5 bg-border/20" />
+                          <QuickPrayerRow label="Jummah" value={prayerTimes.jummah_iqama || prayerTimes.jummah_time} />
+                        </>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <div className="py-8 text-center">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/5 border border-primary/10 mx-auto mb-3">
+                        <Clock className="h-6 w-6 text-primary/40" />
+                      </div>
+                      <p className="text-sm font-medium text-foreground">Prayer times coming soon</p>
+                      <p className="text-xs text-muted-foreground mt-1">The schedule will be published here</p>
+                    </div>
+                  )}
+                </CardContent>
+              </div>
             </Card>
 
             <Card className="rounded-3xl border-border/50">
@@ -884,11 +905,11 @@ function ContactAction({
   );
 }
 
-function QuickPrayerRow({ label, value }: { label: string; value: string | null }) {
+  function QuickPrayerRow({ label, value }: { label: string; value: string | null }) {
   return (
-    <div className="flex items-center justify-between rounded-xl bg-muted/20 px-3 py-2">
-      <span className="font-medium text-foreground">{label}</span>
-      <span className="font-black tracking-tight text-primary">{value || "TBD"}</span>
+    <div className="group flex items-center justify-between px-3 py-2.5 rounded-lg border border-border/20 bg-gradient-to-r from-primary/3 via-transparent to-accent/2 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300">
+      <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">{label}</span>
+      <span className="font-semibold tracking-wide text-primary">{value || "TBD"}</span>
     </div>
   );
 }

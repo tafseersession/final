@@ -411,6 +411,27 @@
     animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
+  /* Premium form styling */
+  .input-premium {
+    @apply px-4 py-2.5 bg-muted/40 border border-border/40 rounded-lg text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/60 focus:bg-background transition-all duration-200;
+  }
+
+  .textarea-premium {
+    @apply px-4 py-2.5 bg-muted/40 border border-border/40 rounded-lg text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/60 focus:bg-background transition-all duration-200 resize-none;
+  }
+
+  .select-premium {
+    @apply px-4 py-2.5 bg-muted/40 border border-border/40 rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/60 focus:bg-background transition-all duration-200;
+  }
+
+  .label-premium {
+    @apply text-sm font-semibold text-foreground tracking-tight;
+  }
+
+  .form-field-premium {
+    @apply space-y-2;
+  }
+
   /* Refined scroll behavior */
   html {
     scroll-behavior: smooth;
