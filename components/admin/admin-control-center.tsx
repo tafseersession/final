@@ -1097,22 +1097,24 @@ export function AdminControlCenter({
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {editingItemId ? "Edit" : "Create"} {selectedEntity?.singularLabel}
-            </DialogTitle>
-            <DialogDescription>{selectedEntity?.description}</DialogDescription>
-          </DialogHeader>
+        <DialogContent className="flex flex-col p-0 gap-0">
+          <div className="px-6 pt-6 pb-4 border-b border-border/20">
+            <DialogHeader>
+              <DialogTitle>
+                {editingItemId ? "Edit" : "Create"} {selectedEntity?.singularLabel}
+              </DialogTitle>
+              <DialogDescription>{selectedEntity?.description}</DialogDescription>
+            </DialogHeader>
+          </div>
           
-          <div className="py-4">
-            <div className="grid gap-4 md:grid-cols-2">
+          <div className="flex-1 overflow-y-auto px-6 py-4">
+            <div className="grid gap-5 md:grid-cols-2">
               {selectedEntity?.formFields.map((field) => (
-                <div key={field.key} className="space-y-2 group">
-                  <Label htmlFor={field.key} className="font-semibold text-foreground flex items-center gap-2">
+                <div key={field.key} className="space-y-2.5 group">
+                  <Label htmlFor={field.key} className="font-semibold text-foreground text-sm flex items-center gap-2">
                     {field.label}
                     {field.description && (
-                      <span className="text-xs font-normal text-muted-foreground bg-muted/50 rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-help" title={field.description}>
+                      <span className="text-xs font-normal text-muted-foreground bg-muted/50 rounded-full px-2 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-help" title={field.description}>
                         ?
                       </span>
                     )}
@@ -1130,7 +1132,7 @@ export function AdminControlCenter({
             </div>
           </div>
           
-          <DialogFooter>
+          <div className="px-6 py-4 border-t border-border/20 bg-muted/20 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
             <Button
               variant="outline"
               onClick={() => setDialogOpen(false)}
@@ -1142,7 +1144,7 @@ export function AdminControlCenter({
               {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               {editingItemId ? "Save Changes" : "Create Record"}
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
