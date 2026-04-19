@@ -22,6 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { StatCard, PanelCard, ActivityPanel } from "@/components/panels";
 import type { AdminActivityEntry, AdminActivityResponse } from "@/lib/admin/types";
 import { useAdminPanelMetadata } from "@/lib/hooks/use-admin-panel";
 
@@ -149,171 +150,98 @@ export default function SuperAdminDashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Governed Surfaces</CardTitle>
-            <Database className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : data?.entities.length ?? 0}</div>
-            <p className="text-xs text-muted-foreground">
-              Admin-managed entities visible from the registry
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Platform Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : profileCount}</div>
-            <p className="text-xs text-muted-foreground">
-              Profiles currently available to governance workflows
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Live Records</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : totalRecords}</div>
-            <p className="text-xs text-muted-foreground">
-              Total rows across visible admin entities
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Enabled Modules</CardTitle>
-            <Settings2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : enabledModules}</div>
-            <p className="text-xs text-muted-foreground">
-              Runtime modules currently enabled from global settings
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          icon={<Database className="h-5 w-5" />}
+          label="Governed Surfaces"
+          value={loading ? "..." : data?.entities.length ?? 0}
+          color="primary"
+        />
+        <StatCard
+          icon={<Users className="h-5 w-5" />}
+          label="Platform Users"
+          value={loading ? "..." : profileCount}
+          color="accent"
+        />
+        <StatCard
+          icon={<Activity className="h-5 w-5" />}
+          label="Live Records"
+          value={loading ? "..." : totalRecords}
+          color="success"
+        />
+        <StatCard
+          icon={<Settings2 className="h-5 w-5" />}
+          label="Enabled Modules"
+          value={loading ? "..." : enabledModules}
+          color="primary"
+        />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_380px]">
-        <Card>
-          <CardHeader>
-            <CardTitle>Governance Workflows</CardTitle>
-            <CardDescription>
-              Use the Super Admin panel for platform-level actions, and keep the
-              operational Admin panel focused on daily management.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
-            <Card className="border-dashed">
-              <CardHeader>
-                <CardTitle className="text-base">Global Control Center</CardTitle>
-                <CardDescription>
-                  Access every registered entity from one surface with realtime sync.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link href="/super-admin/control-center">
-                  <Button variant="outline" size="sm">
-                    Open Control Center
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-            <Card className="border-dashed">
-              <CardHeader>
-                <CardTitle className="text-base">User Governance</CardTitle>
-                <CardDescription>
-                  Manage role hierarchy, account state, and profile governance.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link href="/super-admin/users">
-                  <Button variant="outline" size="sm">
-                    Open User Governance
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-            <Card className="border-dashed">
-              <CardHeader>
-                <CardTitle className="text-base">Global Settings</CardTitle>
-                <CardDescription>
-                  Control runtime modules, permissions, and defaults for the whole app.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link href="/super-admin/settings">
-                  <Button variant="outline" size="sm">
-                    Open Settings
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-            <Card className="border-dashed">
-              <CardHeader>
-                <CardTitle className="text-base">Operational Admin Panel</CardTitle>
-                <CardDescription>
-                  Jump into the day-to-day admin surface without losing separation.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link href="/admin">
-                  <Button variant="outline" size="sm">
-                    Open Admin Panel
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between gap-3">
-              <CardTitle>Recent Platform Activity</CardTitle>
-              {activityUnavailable ? (
-                <Badge variant="outline">Activity Feed Unavailable</Badge>
-              ) : null}
-            </div>
-            <CardDescription>
-              Latest admin-side mutations captured through the shared realtime bus.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {loadingActivity ? (
-              <div className="flex items-center justify-center py-8 text-muted-foreground">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading activity...
-              </div>
-            ) : activity.length === 0 ? (
-              <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                No recent platform activity found.
-              </div>
-            ) : (
-              activity.map((item) => (
-                <div key={item.eventId} className="rounded-xl border px-4 py-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{formatActivityLabel(item)}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {formatEntityLabel(item.entityType)} ID: {item.entityId}
-                      </p>
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_400px]">
+        <PanelCard
+          icon={<Crown className="h-5 w-5" />}
+          title="Governance Workflows"
+          description="Platform-level actions with separation from operational management"
+        >
+          <div className="grid gap-4 md:grid-cols-2">
+            {[
+              {
+                href: "/super-admin/control-center",
+                label: "Global Control Center",
+                description: "Access every entity with realtime sync",
+                icon: Database,
+              },
+              {
+                href: "/super-admin/users",
+                label: "User Governance",
+                description: "Manage role hierarchy and profiles",
+                icon: Users,
+              },
+              {
+                href: "/super-admin/settings",
+                label: "Global Settings",
+                description: "Control modules and defaults",
+                icon: Settings2,
+              },
+              {
+                href: "/admin",
+                label: "Admin Panel",
+                description: "Jump to operational management",
+                icon: UserCog,
+              },
+            ].map((item) => (
+              <Link key={item.href} href={item.href}>
+                <div className="panel-elevated p-4 space-y-3 cursor-pointer group h-full">
+                  <div className="flex items-start gap-3">
+                    <div className="icon-badge-primary group-hover:shadow-elevation-md transition-shadow">
+                      <item.icon className="h-5 w-5" />
                     </div>
-                    <Badge variant="outline">
-                      {new Date(item.occurredAt).toLocaleTimeString()}
-                    </Badge>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-foreground text-sm">{item.label}</h3>
+                      <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
+                    </div>
                   </div>
+                  <Button variant="ghost" size="sm" className="px-0 text-primary hover:text-primary">
+                    Open
+                  </Button>
                 </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
+              </Link>
+            ))}
+          </div>
+        </PanelCard>
+
+        <ActivityPanel
+          items={activity.map((item) => ({
+            id: String(item.eventId),
+            icon: <Activity className="h-4 w-4" />,
+            title: formatActivityLabel(item),
+            description: `${formatEntityLabel(item.entityType)} ID: ${item.entityId}`,
+            timestamp: new Date(item.occurredAt).toLocaleTimeString(),
+          }))}
+          isEmpty={loadingActivity || activityUnavailable}
+          title="Platform Activity"
+          description="Latest mutations through the realtime bus"
+        />
       </div>
     </div>
   );

@@ -26,6 +26,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { StatCard, PanelCard, ActivityPanel } from "@/components/panels";
 import type {
   AdminActivityEntry,
   AdminActivityResponse,
@@ -235,133 +236,73 @@ export default function ImamDashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Managed Surfaces</CardTitle>
-            <Database className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : totalEntities}</div>
-            <p className="text-xs text-muted-foreground">
-              Mosque-scoped entities available to this imam
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Live Records</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : totalRecords}</div>
-            <p className="text-xs text-muted-foreground">
-              Total rows currently managed inside your mosque scope
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Prayer Schedules</CardTitle>
-            <Clock3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {loading ? "..." : prayerTimeCount}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Daily prayer-time rows configured for your mosque
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Recent Activity</CardTitle>
-            <BellRing className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {loadingActivity ? "..." : activity.length}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Latest mosque-scoped updates from your live panel
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          icon={<Database className="h-5 w-5" />}
+          label="Managed Surfaces"
+          value={loading ? "..." : totalEntities}
+          color="primary"
+        />
+        <StatCard
+          icon={<Activity className="h-5 w-5" />}
+          label="Live Records"
+          value={loading ? "..." : totalRecords}
+          color="accent"
+        />
+        <StatCard
+          icon={<Clock3 className="h-5 w-5" />}
+          label="Prayer Schedules"
+          value={loading ? "..." : prayerTimeCount}
+          color="success"
+        />
+        <StatCard
+          icon={<BellRing className="h-5 w-5" />}
+          label="Recent Activity"
+          value={loadingActivity ? "..." : activity.length}
+          color="primary"
+        />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_380px]">
-        <Card>
-          <CardHeader>
-            <CardTitle>Imam Workflows</CardTitle>
-            <CardDescription>
-              Every link below opens a mosque-scoped surface, so you only manage
-              records connected to the mosque where you are actively appointed.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_400px]">
+        <PanelCard
+          icon={<BookOpen className="h-5 w-5" />}
+          title="Imam Workflows"
+          description="Access mosque-scoped surfaces to manage records connected to your mosque"
+        >
+          <div className="grid gap-4 md:grid-cols-2">
             {quickLinks.map((item) => (
-              <Card key={item.href} className="border-dashed">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <item.icon className="h-4 w-4 text-primary" />
-                    {item.label}
-                  </CardTitle>
-                  <CardDescription>{item.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Link href={item.href}>
-                    <Button variant="outline" size="sm">
-                      Open {item.label}
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between gap-3">
-              <CardTitle>Recent Mosque Activity</CardTitle>
-              {activityUnavailable ? (
-                <Badge variant="outline">Activity Feed Unavailable</Badge>
-              ) : null}
-            </div>
-            <CardDescription>
-              Latest updates broadcast from your mosque-scoped management feed.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {loadingActivity ? (
-              <div className="flex items-center justify-center py-8 text-muted-foreground">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading activity...
-              </div>
-            ) : activity.length === 0 ? (
-              <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                No recent mosque activity found.
-              </div>
-            ) : (
-              activity.map((item) => (
-                <div key={item.eventId} className="rounded-xl border px-4 py-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{formatActivityLabel(item)}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {formatEntityLabel(item.entityType)} ID: {item.entityId}
-                      </p>
+              <Link key={item.href} href={item.href}>
+                <div className="panel-elevated p-4 space-y-3 cursor-pointer group h-full">
+                  <div className="flex items-start gap-3">
+                    <div className="icon-badge-primary group-hover:shadow-elevation-md transition-shadow">
+                      <item.icon className="h-5 w-5" />
                     </div>
-                    <Badge variant="outline">
-                      {new Date(item.occurredAt).toLocaleTimeString()}
-                    </Badge>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-foreground text-sm">{item.label}</h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
+                    </div>
                   </div>
+                  <Button variant="ghost" size="sm" className="px-0 text-primary hover:text-primary">
+                    Open
+                  </Button>
                 </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
+              </Link>
+            ))}
+          </div>
+        </PanelCard>
+
+        <ActivityPanel
+          items={activity.map((item) => ({
+            id: String(item.eventId),
+            icon: <Activity className="h-4 w-4" />,
+            title: formatActivityLabel(item),
+            description: `${formatEntityLabel(item.entityType)} ID: ${item.entityId}`,
+            timestamp: new Date(item.occurredAt).toLocaleTimeString(),
+          }))}
+          isEmpty={loadingActivity || activityUnavailable}
+          title="Mosque Activity"
+          description="Latest updates from your mosque operations"
+        />
       </div>
     </div>
   );

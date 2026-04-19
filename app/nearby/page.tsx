@@ -2,6 +2,8 @@ import { Footer, Header } from "@/components/layout";
 import { MosqueDirectory } from "@/components/mosques/mosque-directory";
 import { getPublicDirectoryMosques } from "@/lib/mosques/public";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Nearby Mosques | MosqueConnect",
   description: "Find mosques near your current location and get directions instantly.",
