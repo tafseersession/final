@@ -20,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { StatCard, PanelCard } from "@/components/panels";
 import type { AdminEntityKey } from "@/lib/admin/types";
 import { useAdminPanelMetadata } from "@/lib/hooks/use-admin-panel";
 
@@ -91,130 +92,90 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Managed Entities</CardTitle>
-            <Database className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : entityCount}</div>
-            <p className="text-xs text-muted-foreground">
-              Registry-backed modules the current role can manage
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Live Records</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : totalRecords}</div>
-            <p className="text-xs text-muted-foreground">
-              Current rows across the visible admin entities
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Enabled Modules</CardTitle>
-            <Zap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : enabledModules}</div>
-            <p className="text-xs text-muted-foreground">
-              Controlled from the global settings singleton
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Sync Status</CardTitle>
-            <Shield className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">Live</div>
-            <p className="text-xs text-muted-foreground">
-              Admin writes broadcast through the realtime service
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          icon={<Database className="h-5 w-5" />}
+          label="Managed Entities"
+          value={loading ? "..." : entityCount}
+          color="primary"
+        />
+        <StatCard
+          icon={<Activity className="h-5 w-5" />}
+          label="Live Records"
+          value={loading ? "..." : totalRecords}
+          color="accent"
+        />
+        <StatCard
+          icon={<Zap className="h-5 w-5" />}
+          label="Enabled Modules"
+          value={loading ? "..." : enabledModules}
+          color="success"
+        />
+        <StatCard
+          icon={<Shield className="h-5 w-5" />}
+          label="Sync Status"
+          value="Live"
+          color="primary"
+        />
       </div>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Entity Overview</CardTitle>
-            <CardDescription>
-              Each card reflects the current role&apos;s capability surface from the
-              new admin registry.
-            </CardDescription>
-          </div>
+      <PanelCard
+        icon={<Database className="h-5 w-5" />}
+        title="Entity Overview"
+        description="Each card reflects the current role's capability surface"
+        action={
           <Button
             variant="outline"
+            size="sm"
             onClick={refresh}
+            disabled={loading}
           >
-            Refresh
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
           </Button>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="flex items-center justify-center py-10 text-muted-foreground">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Loading dashboard...
-            </div>
-          ) : !data || data.entities.length === 0 ? (
-            <div className="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-              No admin entities are currently available for your role.
-            </div>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {data.entities.map((entity) => (
-                <Card key={entity.key} className="border-dashed">
-                  <CardHeader className="space-y-2">
-                    <div className="flex items-center justify-between gap-3">
-                      <CardTitle className="text-base">{entity.label}</CardTitle>
-                      <Badge variant="secondary">
-                        {typeof entity.count === "number" ? entity.count : "-"}
-                      </Badge>
-                    </div>
-                    <CardDescription>{entity.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant={entity.capability.read ? "secondary" : "outline"}>
-                        Read
-                      </Badge>
-                      <Badge
-                        variant={entity.capability.create ? "secondary" : "outline"}
-                      >
-                        Create
-                      </Badge>
-                      <Badge
-                        variant={entity.capability.update ? "secondary" : "outline"}
-                      >
-                        Update
-                      </Badge>
-                      <Badge
-                        variant={entity.capability.delete ? "secondary" : "outline"}
-                      >
-                        Delete
-                      </Badge>
-                    </div>
-                    <Link href={getEntityHref(entity.key)}>
-                      <Button variant="ghost" size="sm" className="px-0">
-                        Open {entity.label}
-                        <ArrowUpRight className="ml-1 h-4 w-4" />
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        }
+      >
+        {loading ? (
+          <div className="flex items-center justify-center py-12 text-muted-foreground">
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            Loading entities...
+          </div>
+        ) : !data || data.entities.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-border/40 bg-muted/30 p-8 text-center">
+            <Database className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">No admin entities available for your role</p>
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {data.entities.map((entity) => (
+              <div key={entity.key} className="panel-elevated p-4 space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1 flex-1">
+                    <h3 className="font-semibold text-foreground text-sm">{entity.label}</h3>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{entity.description}</p>
+                  </div>
+                  <Badge className="shrink-0">
+                    {typeof entity.count === "number" ? entity.count : "-"}
+                  </Badge>
+                </div>
+                
+                <div className="flex flex-wrap gap-1.5">
+                  {entity.capability.read && <Badge variant="secondary" className="text-xs">Read</Badge>}
+                  {entity.capability.create && <Badge variant="secondary" className="text-xs">Create</Badge>}
+                  {entity.capability.update && <Badge variant="secondary" className="text-xs">Update</Badge>}
+                  {entity.capability.delete && <Badge variant="secondary" className="text-xs">Delete</Badge>}
+                </div>
+                
+                <Link href={getEntityHref(entity.key)} className="block">
+                  <Button variant="ghost" size="sm" className="px-0 w-full justify-start">
+                    Open {entity.label}
+                    <ArrowUpRight className="ml-auto h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+      </PanelCard>
     </div>
   );
 }

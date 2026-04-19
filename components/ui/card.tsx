@@ -2,12 +2,28 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-function Card({ className, ...props }: React.ComponentProps<'div'>) {
+interface CardProps extends React.ComponentProps<'div'> {
+  variant?: 'default' | 'elevated' | 'gradient' | 'glass' | 'stat' | 'panel'
+  hover?: boolean
+}
+
+function Card({ className, variant = 'default', hover = true, ...props }: CardProps) {
+  const variants = {
+    default: 'bg-card/95 backdrop-blur-sm border border-border/40 shadow-sm',
+    elevated: 'bg-card/98 backdrop-blur-md border border-border/30 shadow-elevation-md hover:shadow-elevation-lg',
+    gradient: 'bg-gradient-to-br from-card via-card to-card/80 backdrop-blur-md border border-border/30 shadow-elevation-md',
+    glass: 'bg-background/40 backdrop-blur-xl border border-border/20 shadow-elevation-sm',
+    stat: 'bg-gradient-to-br from-primary/5 via-transparent to-accent/5 border border-primary/10 shadow-elevation-sm hover:shadow-elevation-md hover:border-primary/20',
+    panel: 'bg-card/95 backdrop-blur-sm border border-border/30 shadow-elevation-md hover:shadow-elevation-lg',
+  }
+
   return (
     <div
       data-slot="card"
       className={cn(
-        'bg-card/95 backdrop-blur-sm text-card-foreground flex flex-col gap-6 rounded-xl border border-border/40 py-7 px-6 shadow-sm transition-all duration-300',
+        'text-card-foreground flex flex-col gap-6 rounded-2xl py-7 px-6 transition-all duration-300',
+        variants[variant],
+        hover && 'hover:scale-[1.01]',
         className,
       )}
       {...props}
@@ -15,16 +31,38 @@ function Card({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
+interface CardHeaderProps extends React.ComponentProps<'div'> {
+  icon?: React.ReactNode
+  gradient?: boolean
+  iconBg?: 'primary' | 'accent' | 'success' | 'muted'
+}
+
+function CardHeader({ className, icon, gradient = false, iconBg = 'primary', ...props }: CardHeaderProps) {
   return (
     <div
       data-slot="card-header"
       className={cn(
-        '@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-3 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6',
+        '@container/card-header -mx-6 -mt-7 px-6 pt-6 pb-4 rounded-t-2xl',
+        gradient && 'bg-gradient-to-r from-primary/8 via-transparent to-accent/5 border-b border-border/20',
+        !gradient && 'border-b border-border/10',
+        'grid auto-rows-min grid-rows-[auto_auto] items-start gap-3 has-data-[slot=card-action]:grid-cols-[1fr_auto]',
         className,
       )}
       {...props}
-    />
+    >
+      {icon && (
+        <div className={cn(
+          'inline-flex h-10 w-10 items-center justify-center rounded-lg border',
+          iconBg === 'primary' && 'bg-primary/15 border-primary/20 text-primary',
+          iconBg === 'accent' && 'bg-accent/15 border-accent/20 text-accent',
+          iconBg === 'success' && 'bg-green-500/15 border-green-500/20 text-green-600 dark:text-green-400',
+          iconBg === 'muted' && 'bg-muted/40 border-border/20 text-muted-foreground',
+        )}>
+          {icon}
+        </div>
+      )}
+      {props.children}
+    </div>
   )
 }
 
@@ -32,7 +70,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-title"
-      className={cn('text-xl font-semibold leading-none tracking-tight text-foreground', className)}
+      className={cn('text-lg font-bold leading-tight tracking-tight text-foreground', className)}
       {...props}
     />
   )
@@ -42,7 +80,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-description"
-      className={cn('text-sm leading-relaxed text-muted-foreground', className)}
+      className={cn('text-sm leading-relaxed text-muted-foreground mt-1', className)}
       {...props}
     />
   )

@@ -432,6 +432,86 @@
     @apply space-y-2;
   }
 
+  /* Elevation shadows for premium panels */
+  .shadow-elevation-xs {
+    @apply shadow-[0_1px_2px_rgba(0,0,0,0.05)];
+  }
+
+  .shadow-elevation-sm {
+    @apply shadow-[0_2px_4px_rgba(0,0,0,0.08)];
+  }
+
+  .shadow-elevation-md {
+    @apply shadow-[0_4px_12px_rgba(0,0,0,0.1)];
+  }
+
+  .shadow-elevation-lg {
+    @apply shadow-[0_8px_24px_rgba(0,0,0,0.12)];
+  }
+
+  .shadow-elevation-xl {
+    @apply shadow-[0_16px_40px_rgba(0,0,0,0.15)];
+  }
+
+  /* Premium panel utilities */
+  .panel-base {
+    @apply rounded-2xl border border-border/30 backdrop-blur-sm transition-all duration-300;
+  }
+
+  .panel-elevated {
+    @apply panel-base bg-card/95 shadow-elevation-md hover:shadow-elevation-lg hover:border-primary/20;
+  }
+
+  .panel-gradient {
+    @apply panel-base bg-gradient-to-br from-primary/5 via-card to-accent/5 shadow-elevation-md hover:shadow-elevation-lg;
+  }
+
+  .panel-glass {
+    @apply panel-base bg-background/40 shadow-elevation-sm border-border/20;
+  }
+
+  /* Icon badge utilities */
+  .icon-badge-primary {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 border border-primary/20 text-primary;
+  }
+
+  .icon-badge-accent {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 border border-accent/20 text-accent;
+  }
+
+  .icon-badge-success {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/15 border border-green-500/20 text-green-600 dark:text-green-400;
+  }
+
+  .icon-badge-muted {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-lg bg-muted/40 border border-border/20 text-muted-foreground;
+  }
+
+  /* Stat card styling */
+  .stat-card {
+    @apply panel-elevated p-6 flex flex-col gap-3;
+  }
+
+  .stat-value {
+    @apply text-3xl font-bold text-foreground;
+  }
+
+  .stat-label {
+    @apply text-sm font-medium text-muted-foreground;
+  }
+
+  .stat-change {
+    @apply text-xs font-semibold;
+  }
+
+  .stat-change-positive {
+    @apply text-green-600 dark:text-green-400;
+  }
+
+  .stat-change-negative {
+    @apply text-destructive;
+  }
+
   /* Refined scroll behavior */
   html {
     scroll-behavior: smooth;
