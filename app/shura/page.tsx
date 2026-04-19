@@ -241,7 +241,7 @@ export default function ShuraDashboardPage() {
 
         <ActivityPanel
           items={activity.map((item) => ({
-            id: item.eventId,
+            id: String(item.eventId),
             icon: <Activity className="h-4 w-4" />,
             title: formatActivityLabel(item),
             description: `${formatEntityLabel(item.entityType)} ID: ${item.entityId}`,
